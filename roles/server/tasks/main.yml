@@ -1,0 +1,37 @@
+---
+# tasks file for server
+
+- name: Adding nginx repo
+  apt_repository:
+    repo: ppa:nginx/stable
+
+- name: Updating and upgrading
+  apt:
+    update_cache: yes
+    upgrade: yes
+    cache_valid_time: 86400 #one day
+
+- name: Installing required server software
+  apt: name={{ item }} state=present
+  with_items:
+    - nginx
+    - mysql-server
+    - php-mysql
+    - php-fpm
+    - monit
+    - python3-mysqldb
+
+- name: Starting nginx
+  service:
+    name: nginx
+    state: started
+
+- name: Starting php-fpm
+  service:
+    name: php7.2-fpm
+    state: started
+
+- name: Starting monit
+  service:
+    name: monit
+    state: started

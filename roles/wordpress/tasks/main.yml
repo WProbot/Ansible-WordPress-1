@@ -1,0 +1,60 @@
+---
+# tasks file for wordpress
+
+- name: Creating user log dir
+  file:
+    state: directory
+    path: /home/user/logs
+
+- name: Copying nginx vgost config file
+  copy:
+    src: ../configurations
+    dest: /etc/nginx/conf.d/yoursite.conf
+
+- name: Disabling default nginx vhost
+  file:
+    state: absent
+    path: /etc/nginx/sites-enabled/default
+
+- name: Creating php-fpm logfile
+  command: touch /home/youruser/logs/phpfpm_error.log
+
+- name: Logging in as suer
+  command: su - user
+
+- name: Downloading WordPress
+  command: wget https://wordpress.org/latest.tar.gz
+
+- name: Extracting WordPress archive
+  command: tar zx latest.tar.gz
+
+- name: Deleting tar.gz file
+  command: rm latest.tar.gz
+
+- name: Renaming extracted wordpress directory
+  command: mv /home/youruser/wordpress /home/youruser/public_html
+
+- name: Exiting user shell and becoming root again
+  command: exit
+
+- name: Setting proper file permissions on site files
+  command: chown -R youruser:www-data /home/youruser/public_html
+
+- name: Setting permissions for directories
+  command: find /home/youruser/public_html -type d -exec chmod 755 {} \;
+
+- name: Setting permissions for files
+  command: find /home/youruser/public_html -type f -exec chmod 644 {} \;
+
+- name: Restarting php7.2-fpm
+  service:
+    name: php7.2-fpm
+    state: restarted
+
+- name: Restarting nginx
+  service:
+    name: nginx
+    state: restarted
+
+
+

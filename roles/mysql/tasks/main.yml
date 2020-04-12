@@ -1,0 +1,18 @@
+---
+# tasks file for mysql
+
+- name: Creating mysql database
+  mysql_db: name={{ wp_mysql_db }} state=present
+
+- name: Creating mysql user
+  mysql_user:
+    name={{ wp_mysql_user }}
+    password={{ wp_mysql_password }}
+    priv=*.*:ALL
+
+- name: Restarting mysql
+  service:
+    name: mysql
+    state: restarted
+
+

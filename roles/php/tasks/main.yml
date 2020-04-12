@@ -1,0 +1,48 @@
+---
+# tasks file for php
+
+- name: Installing php extensions
+  apt: name={{ item }} state=present
+  with_items:
+    - php-json
+    - php-xmlrpc
+    - php-curl
+    - php-gd
+    - php-xml
+    - php-mbstring
+
+- name: Creating /var/run/php-fpm
+  file:
+    state: directory
+    path: /var/run/php-fpmTest
+
+- name: Backing up php-fpm.conf
+  command: mv /etc/php/7.2/fpm/php-fpmTest.conf /etc/php/7.2/fpm/php-fpmTest.conf.ORIG
+
+- name: Copying php-fpm configuration
+  copy:
+    src: ../configurations/php-fpmTest.conf
+    dest: /etc/php/7.2/fpm
+
+- name: Removing original pool
+  file:
+    state: absent
+    path: /etc/php/7.2/fpm/pool.d/wwwTest.conf
+
+- name: Copying pool.d configuration
+  copy:
+    src: ../configurations/wwwTest.conf
+    dest: /etc/php/7.2/fpm/pool.d
+
+- name: Backing up php.ini
+  command: mv /etc/php/7.2/fpm/phpTest.ini /etc/php/7.2/fpm/phpTest.ini.ORIG
+
+- name: Copying php.ini configuration
+  copy:
+    src: ../configurations/phpTest.ini
+    dest: /etc/php/7.2/fpm
+
+- name: Restarting php7.2-fpm
+  service:
+    name: php7.2-fpm
+    state: restarted

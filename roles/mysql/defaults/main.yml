@@ -1,0 +1,6 @@
+---
+# defaults file for mysql
+wp_mysql_db: your_db_name
+wp_mysql_user: your_db_user
+wp_mysql_password: your_db_password
+

@@ -1,0 +1,2 @@
+[wordpress]
+your_server_ip ansible_connection=ssh ansible_user=your_user ansible_ssh_pass=your_pw ansible_python_interpreter=/usr/bin/python3

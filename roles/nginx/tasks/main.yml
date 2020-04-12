@@ -1,0 +1,21 @@
+---
+# tasks file for nginx
+
+- name: Backing up nginx.conf
+  command: mv /etc/nginx/nginxTest.conf /etc/nginx/nginxTest.conf.ORIG
+
+- name: Copying nginx.conf
+  copy:
+    src: ../configurations/nginxTest.conf
+    dest: /etc/nginx/
+
+- name: Creating cache directory
+  file:
+    path: /usr/share/nginx/cache/fcgiTest
+    state: directory
+
+- name: Reloading nginx service
+  service:
+    name: nginx
+    state: reloaded
+ 
